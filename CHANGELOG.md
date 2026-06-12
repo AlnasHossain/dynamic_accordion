@@ -1,3 +1,8 @@
+## 1.0.1
+
+* Fixed deprecated `withOpacity` warning to ensure compatibility with recent Flutter versions.
+* Improved static analysis compliance.
+
 ## 1.0.0
 
 * Initial release of `dynamic_accordion`.

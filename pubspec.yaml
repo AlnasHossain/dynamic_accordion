@@ -1,6 +1,6 @@
 name: dynamic_accordion
 description: A dynamic list of accordion-style expansion tiles that allows users to seamlessly insert and remove items at specific indices.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/AlnasHossain/dynamic_accordion
 repository: https://github.com/AlnasHossain/dynamic_accordion
 
