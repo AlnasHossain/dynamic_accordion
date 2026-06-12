@@ -1,0 +1,16 @@
+name: dynamic_accordion_example
+description: A working example of the dynamic_accordion package.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dynamic_accordion:
+    path: ../
+
+# ADD THIS SECTION BELOW
+flutter:
+  uses-material-design: true
