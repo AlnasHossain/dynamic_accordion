@@ -16,8 +16,45 @@ class DynamicAccordionList<T> extends StatefulWidget {
   final T Function() onAdd;
 
   /// Optional: Called before an item is removed.
-  /// Return true to proceed with deletion, false to cancel (useful for showing confirmation dialogs).
+  /// Return true to proceed with deletion, false to cancel.
   final bool Function(int index, T item)? onDelete;
+
+  // ==========================================
+  // NEW: Stylistic & Layout Parameters
+  // ==========================================
+
+  /// The background color of the card.
+  final Color? cardColor;
+
+  /// The shadow elevation of the card. Defaults to 2.0.
+  final double? elevation;
+
+  /// The border radius of the card. Defaults to 8.0.
+  final BorderRadiusGeometry? borderRadius;
+
+  /// The color of the card's border.
+  final Color? borderColor;
+
+  /// Custom icon for the 'Add' button. Defaults to Icons.add_circle_outline.
+  final Widget? addIcon;
+
+  /// Custom icon for the 'Delete' button. Defaults to Icons.delete_outline.
+  final Widget? deleteIcon;
+
+  /// Custom color for the 'Add' button. Defaults to Theme primary color.
+  final Color? addIconColor;
+
+  /// Custom color for the 'Delete' button. Defaults to Theme error color.
+  final Color? deleteIconColor;
+
+  /// Whether the tiles should be expanded by default. Defaults to false.
+  final bool initiallyExpanded;
+
+  /// Scroll physics for the list. Defaults to NeverScrollableScrollPhysics().
+  final ScrollPhysics? physics;
+
+  /// Whether the list should shrink-wrap its contents. Defaults to true.
+  final bool shrinkWrap;
 
   const DynamicAccordionList({
     super.key,
@@ -26,6 +63,17 @@ class DynamicAccordionList<T> extends StatefulWidget {
     required this.bodyBuilder,
     required this.onAdd,
     this.onDelete,
+    this.cardColor,
+    this.elevation,
+    this.borderRadius,
+    this.borderColor,
+    this.addIcon,
+    this.deleteIcon,
+    this.addIconColor,
+    this.deleteIconColor,
+    this.initiallyExpanded = false,
+    this.physics,
+    this.shrinkWrap = true,
   });
 
   @override
@@ -37,19 +85,20 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: widget.shrinkWrap,
+      physics: widget.physics ?? const NeverScrollableScrollPhysics(),
       itemCount: widget.items.length,
       itemBuilder: (context, index) {
         final item = widget.items[index];
 
         return Card(
-          elevation: 2,
+          color: widget.cardColor,
+          elevation: widget.elevation ?? 2.0,
           margin: const EdgeInsets.only(bottom: 16.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
             side: BorderSide(
-              color:
+              color: widget.borderColor ??
                   Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
             ),
           ),
@@ -57,6 +106,7 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
             children: [
               // 1. The Accordion
               ExpansionTile(
+                initiallyExpanded: widget.initiallyExpanded,
                 shape:
                     const Border(), // Removes default flutter borders on expansion
                 title: widget.headerBuilder(context, index, item),
@@ -68,7 +118,7 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
                 ],
               ),
 
-              // 2. The Dynamic Action Bar (Inside the Card, below the accordion)
+              // 2. The Dynamic Action Bar
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
@@ -78,9 +128,10 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.delete_outline),
-                      color: Theme.of(context).colorScheme.error,
-                      // Disable delete if it's the last remaining item
+                      icon:
+                          widget.deleteIcon ?? const Icon(Icons.delete_outline),
+                      color: widget.deleteIconColor ??
+                          Theme.of(context).colorScheme.error,
                       onPressed: widget.items.length > 1
                           ? () {
                               bool shouldDelete = true;
@@ -97,10 +148,11 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
                       tooltip: 'Delete this section',
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add_circle_outline),
-                      color: Theme.of(context).colorScheme.primary,
+                      icon: widget.addIcon ??
+                          const Icon(Icons.add_circle_outline),
+                      color: widget.addIconColor ??
+                          Theme.of(context).colorScheme.primary,
                       onPressed: () {
-                        // Core Logic: Insert at index + 1
                         setState(() {
                           widget.items.insert(index + 1, widget.onAdd());
                         });

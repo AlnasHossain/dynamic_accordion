@@ -1,3 +1,10 @@
+## 1.1.0
+
+* **Feature:** Added comprehensive styling parameters (`cardColor`, `elevation`, `borderRadius`, `borderColor`).
+* **Feature:** Added ability to fully customize action bar icons and colors (`addIcon`, `deleteIcon`, `addIconColor`, `deleteIconColor`).
+* **Feature:** Added layout control parameters (`initiallyExpanded`, `shrinkWrap`, and `physics`).
+* **Documentation:** Added a comprehensive example application demonstrating core functionality and UI customization.
+
 ## 1.0.1
 
 * Fixed deprecated `withOpacity` warning to ensure compatibility with recent Flutter versions.
