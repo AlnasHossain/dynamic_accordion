@@ -1,6 +1,6 @@
 name: dynamic_accordion
 description: A highly customizable Flutter widget that manages dynamic lists of ExpansionTiles, allowing users to insert, remove, and reorder sections on the fly.
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/AlnasHossain/dynamic_accordion
 repository: https://github.com/AlnasHossain/dynamic_accordion
 

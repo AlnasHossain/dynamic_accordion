@@ -11,6 +11,5 @@ dependencies:
   dynamic_accordion:
     path: ../
 
-# ADD THIS SECTION BELOW
 flutter:
   uses-material-design: true

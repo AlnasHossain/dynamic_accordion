@@ -113,6 +113,7 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
           child: child,
         );
       },
+      // ignore: deprecated_member_use
       onReorder: (int oldIndex, int newIndex) {
         setState(() {
           if (newIndex > oldIndex) {

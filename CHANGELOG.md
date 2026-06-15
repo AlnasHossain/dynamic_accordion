@@ -1,3 +1,7 @@
+## 1.2.1
+* **Fix:** Resolved static analysis warning by using `onReorder` with a deprecation ignore, ensuring compatibility across all Flutter versions.
+
+
 ## 1.2.0
 
 * **Feature:** Added true Drag-and-Drop reordering support via `ReorderableListView`.
