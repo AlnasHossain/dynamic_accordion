@@ -78,6 +78,12 @@ class _ExamplePageState extends State<ExamplePage> {
           deleteIcon:
               const Icon(Icons.delete_forever), // Swapped to forever icon
           deleteIconColor: Colors.red.shade400,
+
+          // Change the icon itself
+          dragIcon: Icons.drag_indicator, // Instead of the default 3 lines
+
+          // Change the color
+          dragIconColor: Colors.blueGrey,
         ),
       ),
     );

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// A dynamic list of accordion-style expansion tiles that allows users
-/// to insert new items exactly where they click, and remove specific items.
+/// to insert new items exactly where they click, remove specific items,
+/// and drag-and-drop to reorder them.
 class DynamicAccordionList<T> extends StatefulWidget {
   /// The mutable list of data objects or controllers.
   final List<T> items;
@@ -23,6 +24,9 @@ class DynamicAccordionList<T> extends StatefulWidget {
   // NEW: Stylistic & Layout Parameters
   // ==========================================
 
+  /// Whether the items can be drag-and-dropped to reorder. Defaults to true.
+  final bool isReorderable;
+
   /// The background color of the card.
   final Color? cardColor;
 
@@ -34,6 +38,12 @@ class DynamicAccordionList<T> extends StatefulWidget {
 
   /// The color of the card's border.
   final Color? borderColor;
+
+  /// Custom icon for the drag handle. Defaults to Icons.drag_handle.
+  final IconData? dragIcon;
+
+  /// Custom color for the drag handle.
+  final Color? dragIconColor;
 
   /// Custom icon for the 'Add' button. Defaults to Icons.add_circle_outline.
   final Widget? addIcon;
@@ -63,10 +73,13 @@ class DynamicAccordionList<T> extends StatefulWidget {
     required this.bodyBuilder,
     required this.onAdd,
     this.onDelete,
+    this.isReorderable = true,
     this.cardColor,
     this.elevation,
     this.borderRadius,
     this.borderColor,
+    this.dragIcon,
+    this.dragIconColor,
     this.addIcon,
     this.deleteIcon,
     this.addIconColor,
@@ -84,14 +97,36 @@ class DynamicAccordionList<T> extends StatefulWidget {
 class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ReorderableListView.builder(
       shrinkWrap: widget.shrinkWrap,
-      physics: widget.physics ?? const NeverScrollableScrollPhysics(),
+      physics: widget.physics ?? const BouncingScrollPhysics(),
+      buildDefaultDragHandles: false,
       itemCount: widget.items.length,
+      // ==========================================
+      // FIX: Custom Proxy Decorator removes the white background
+      // ==========================================
+      proxyDecorator: (Widget child, int index, Animation<double> animation) {
+        return Material(
+          color: Colors.transparent, // This removes the white box
+          elevation:
+              0, // Prevents double-shadowing since the Card already has a shadow
+          child: child,
+        );
+      },
+      onReorder: (int oldIndex, int newIndex) {
+        setState(() {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final T item = widget.items.removeAt(oldIndex);
+          widget.items.insert(newIndex, item);
+        });
+      },
       itemBuilder: (context, index) {
         final item = widget.items[index];
 
         return Card(
+          key: ObjectKey(item),
           color: widget.cardColor,
           elevation: widget.elevation ?? 2.0,
           margin: const EdgeInsets.only(bottom: 16.0),
@@ -104,11 +139,9 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
           ),
           child: Column(
             children: [
-              // 1. The Accordion
               ExpansionTile(
                 initiallyExpanded: widget.initiallyExpanded,
-                shape:
-                    const Border(), // Removes default flutter borders on expansion
+                shape: const Border(),
                 title: widget.headerBuilder(context, index, item),
                 children: [
                   Padding(
@@ -117,16 +150,29 @@ class _DynamicAccordionListState<T> extends State<DynamicAccordionList<T>> {
                   ),
                 ],
               ),
-
-              // 2. The Dynamic Action Bar
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
                   vertical: 4.0,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    if (widget.isReorderable)
+                      ReorderableDragStartListener(
+                        index: index,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            widget.dragIcon ?? Icons.drag_handle,
+                            color: widget.dragIconColor ??
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant
+                                    .withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                    const Spacer(),
                     IconButton(
                       icon:
                           widget.deleteIcon ?? const Icon(Icons.delete_outline),

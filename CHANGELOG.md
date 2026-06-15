@@ -1,3 +1,10 @@
+## 1.2.0
+
+* **Feature:** Added true Drag-and-Drop reordering support via `ReorderableListView`.
+* **Feature:** Added custom `dragIcon` and `dragIconColor` parameters.
+* **Fix:** Added a custom `proxyDecorator` to remove the default white background during drag animations, preserving custom card styling.
+
+
 ## 1.1.0
 
 * **Feature:** Added comprehensive styling parameters (`cardColor`, `elevation`, `borderRadius`, `borderColor`).
