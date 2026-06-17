@@ -1,4 +1,16 @@
+## 2.0.0
+
+* **Feature:** Introduced `DynamicAccordionController` to support programmatic layout manipulation including expanding/collapsing all sections, opening specific indices, and clearing validation markers.
+* **Feature:** Added programmatic scroll targeting (`scrollToIndex`) using safe contextual frame mapping to snap viewports directly to specific list indices.
+* **Feature:** Added `exclusiveMode` parameter allowing the list to automatically collapse neighboring accordion items when a new section is opened.
+* **Feature:** Added inline form validation support via the `hasError` evaluation callback and `validationColor` parameter, allowing dynamic red-border alerting for invalid data slots.
+* **Fix:** Resolved a critical Flutter rendering crash (`LeaderLayer anchor must come before FollowerLayer in paint order`) by enforcing instant text field focus release (`FocusManager.unfocus`) at the moment a drag sequence starts.
+* **Refactor:** Migrated internal tracking maps from legacy `ExpansionTileController` instances to standard `ExpansibleController` objects to guarantee compliance with modern Flutter engines.
+* **Performance:** Implemented active lifecycle hooks to explicitly dispose of internal structural controllers upon cell deletion or widget unmounting to guarantee zero memory leaks.
+
+
 ## 1.2.1
+
 * **Fix:** Resolved static analysis warning by using `onReorder` with a deprecation ignore, ensuring compatibility across all Flutter versions.
 
 
